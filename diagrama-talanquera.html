@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Talanquera: circuito original vs simplificado</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1d2330;--muted:#5b6170;--line:#dfe2e8;--soft:#f5f6f8;--red:#a3161a;--green:#0b7a3b;--bg:#ffffff}
+*{box-sizing:border-box}
+body{margin:0;background:#e9ebef;font-family:'IBM Plex Sans',system-ui,sans-serif;color:var(--ink)}
+#lamina{width:1680px;margin:0 auto;background:var(--bg);padding:44px 52px 40px}
+header{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:3px solid var(--ink);padding-bottom:18px;margin-bottom:24px}
+.kicker{font-size:13px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--red);margin:0 0 6px}
+h1{margin:0;font-size:34px;line-height:1.1;letter-spacing:-.01em}
+.src{font-size:13px;color:var(--muted);text-align:right;line-height:1.5}
+.mono{font-family:'IBM Plex Mono',monospace}
+.expr{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px}
+.expr>div{border:1px solid var(--line);border-radius:10px;padding:14px 18px;background:var(--soft)}
+.expr .lbl{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.expr .f{font-family:'IBM Plex Mono',monospace;font-size:17px;font-weight:600}
+.expr .s .f{color:var(--green);font-size:20px}
+.grid{display:grid;grid-template-columns:925.0fr 789.0fr;gap:24px} .grid>*{min-width:0} .svgwrap svg{width:100%;height:auto;display:block}
+.panel{border:1px solid var(--line);border-radius:12px;padding:18px 20px 14px;display:flex;flex-direction:column}
+.panel h2{margin:0 0 2px;font-size:20px}
+.panel .sub{margin:0 0 10px;font-size:14px;color:var(--muted)}
+.panel .badge{display:inline-block;font-size:12px;font-weight:700;padding:3px 9px;border-radius:999px;margin-left:8px;vertical-align:2px}
+.b-red{background:#fdecec;color:var(--red)} .b-green{background:#e3f4ea;color:var(--green)}
+.svgwrap{flex:1;display:flex;align-items:center;justify-content:center}
+svg .gate{stroke:var(--ink);stroke-width:2.2}
+svg .glabel{font:600 12px 'IBM Plex Mono',monospace;fill:var(--ink)}
+svg .var{font:700 18px 'IBM Plex Mono',monospace}
+svg .case{font:600 12px 'IBM Plex Sans',sans-serif;fill:var(--muted)}
+svg .redund{font:italic 500 12px 'IBM Plex Sans',sans-serif;fill:var(--red)}
+svg .out{font:700 22px 'IBM Plex Mono',monospace;fill:var(--ink)}
+svg .pin{font:600 11px 'IBM Plex Mono',monospace;fill:var(--muted)}
+svg .tag{font:600 12.5px 'IBM Plex Mono',monospace}
+.count{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap}
+.count span{font-size:13px;background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:5px 10px}
+.count b{font-family:'IBM Plex Mono',monospace}
+.chip{display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:28px;border-radius:7px;background:var(--c);color:#fff;font:700 15px 'IBM Plex Mono',monospace;flex:none}
+.props{list-style:none;margin:0;padding:0;display:grid;gap:7px}
+.props li{display:flex;gap:10px;align-items:center;font-size:14px;line-height:1.35}
+.props.in{grid-template-columns:1fr 1fr}
+.sect{margin-top:24px;display:grid;grid-template-columns:1.05fr .95fr;gap:24px}
+.box{border:1px solid var(--line);border-radius:12px;padding:18px 20px}
+.box h3{margin:0 0 12px;font-size:17px}
+.box h4{margin:16px 0 8px;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+td.n{font-family:'IBM Plex Mono',monospace;font-weight:600;color:var(--muted);width:28px}
+td.mono{font-family:'IBM Plex Mono',monospace;font-size:13px;white-space:nowrap}
+tr.final td{background:#e3f4ea;font-weight:600}
+.cmp td:nth-child(2){color:var(--red)} .cmp td:nth-child(3){color:var(--green);font-weight:600}
+.why{margin:0;padding-left:18px;font-size:14px;line-height:1.5}
+.why li{margin-bottom:6px}
+.concl{margin-top:12px;padding:12px 14px;border-radius:9px;background:var(--ink);color:#fff;font-size:15px}
+.concl .mono{color:#9be3b5}
+footer{margin-top:18px;font-size:12px;color:var(--muted)}
+</style></head>
+<body>
+<div id="lamina">
+<header>
+  <div>
+    <p class="kicker">Función específica · Expresión compuesta 1</p>
+    <h1>Apertura de la talanquera descrita por casos</h1>
+  </div>
+  <div class="src">Sistema de Gestión y Control de Parqueaderos<br>Universidad de la Costa · Ingeniería de Sistemas</div>
+</header>
+
+<div class="expr">
+  <div><div class="lbl">Expresión booleana original</div><div class="f">T = (L·V·A·D) + (F·V·A·D) + (L·F·V·A·D) + (L·V·G·B·D) + (F·V·G·B·D)</div></div>
+  <div class="s"><div class="lbl">Expresión simplificada (álgebra de Boole)</div><div class="f">T = (L + F) · V · (A + G·B) · D = N · V · H · D</div></div>
+</div>
+
+<div class="grid">
+  <div class="panel">
+    <h2>Circuito inicial <span class="badge b-red">por casos</span></h2>
+    <p class="sub">Un AND por cada caso y un OR que los une. El Caso 3 es redundante.</p>
+    <div class="svgwrap"><svg viewBox="0 0 925.0 686"><text x="50" y="34" text-anchor="middle" class="var" fill="#1f6fb2">L</text><path d="M50,44 L50,666" fill="none" stroke="#1f6fb2" stroke-width="2" stroke-linejoin="round"/><text x="102" y="34" text-anchor="middle" class="var" fill="#0e8a7e">F</text><path d="M102,44 L102,666" fill="none" stroke="#0e8a7e" stroke-width="2" stroke-linejoin="round"/><text x="154" y="34" text-anchor="middle" class="var" fill="#7a4fb5">V</text><path d="M154,44 L154,666" fill="none" stroke="#7a4fb5" stroke-width="2" stroke-linejoin="round"/><text x="206" y="34" text-anchor="middle" class="var" fill="#b5651d">A</text><path d="M206,44 L206,666" fill="none" stroke="#b5651d" stroke-width="2" stroke-linejoin="round"/><text x="258" y="34" text-anchor="middle" class="var" fill="#c2185b">G</text><path d="M258,44 L258,666" fill="none" stroke="#c2185b" stroke-width="2" stroke-linejoin="round"/><text x="310" y="34" text-anchor="middle" class="var" fill="#5b7d1a">B</text><path d="M310,44 L310,666" fill="none" stroke="#5b7d1a" stroke-width="2" stroke-linejoin="round"/><text x="362" y="34" text-anchor="middle" class="var" fill="#a3161a">D</text><path d="M362,44 L362,666" fill="none" stroke="#a3161a" stroke-width="2" stroke-linejoin="round"/><path d="M50,92.5 L470,92.5" fill="none" stroke="#1f6fb2" stroke-width="1.8" stroke-linejoin="round"/><circle cx="50" cy="92.5" r="4.2" fill="#1f6fb2"/><path d="M154,109.5 L470,109.5" fill="none" stroke="#7a4fb5" stroke-width="1.8" stroke-linejoin="round"/><circle cx="154" cy="109.5" r="4.2" fill="#7a4fb5"/><path d="M206,126.5 L470,126.5" fill="none" stroke="#b5651d" stroke-width="1.8" stroke-linejoin="round"/><circle cx="206" cy="126.5" r="4.2" fill="#b5651d"/><path d="M362,143.5 L470,143.5" fill="none" stroke="#a3161a" stroke-width="1.8" stroke-linejoin="round"/><circle cx="362" cy="143.5" r="4.2" fill="#a3161a"/><path d="M470,75.0 H510 A43.0,43.0 0 0 1 510,161.0 H470 Z" class="gate" fill="#fff"/><text x="510" y="122" class="glabel" text-anchor="middle">AND</text><text x="462" y="69.0" class="case" text-anchor="end">Caso 1</text><path d="M102,214.5 L470,214.5" fill="none" stroke="#0e8a7e" stroke-width="1.8" stroke-linejoin="round"/><circle cx="102" cy="214.5" r="4.2" fill="#0e8a7e"/><path d="M154,231.5 L470,231.5" fill="none" stroke="#7a4fb5" stroke-width="1.8" stroke-linejoin="round"/><circle cx="154" cy="231.5" r="4.2" fill="#7a4fb5"/><path d="M206,248.5 L470,248.5" fill="none" stroke="#b5651d" stroke-width="1.8" stroke-linejoin="round"/><circle cx="206" cy="248.5" r="4.2" fill="#b5651d"/><path d="M362,265.5 L470,265.5" fill="none" stroke="#a3161a" stroke-width="1.8" stroke-linejoin="round"/><circle cx="362" cy="265.5" r="4.2" fill="#a3161a"/><path d="M470,197.0 H510 A43.0,43.0 0 0 1 510,283.0 H470 Z" class="gate" fill="#fff"/><text x="510" y="244" class="glabel" text-anchor="middle">AND</text><text x="462" y="191.0" class="case" text-anchor="end">Caso 2</text><path d="M50,328.0 L470,328.0" fill="none" stroke="#1f6fb2" stroke-width="1.8" stroke-linejoin="round"/><circle cx="50" cy="328.0" r="4.2" fill="#1f6fb2"/><path d="M102,345.0 L470,345.0" fill="none" stroke="#0e8a7e" stroke-width="1.8" stroke-linejoin="round"/><circle cx="102" cy="345.0" r="4.2" fill="#0e8a7e"/><path d="M154,362.0 L470,362.0" fill="none" stroke="#7a4fb5" stroke-width="1.8" stroke-linejoin="round"/><circle cx="154" cy="362.0" r="4.2" fill="#7a4fb5"/><path d="M206,379.0 L470,379.0" fill="none" stroke="#b5651d" stroke-width="1.8" stroke-linejoin="round"/><circle cx="206" cy="379.0" r="4.2" fill="#b5651d"/><path d="M362,396.0 L470,396.0" fill="none" stroke="#a3161a" stroke-width="1.8" stroke-linejoin="round"/><circle cx="362" cy="396.0" r="4.2" fill="#a3161a"/><path d="M470,310.5 H510 A51.5,51.5 0 0 1 510,413.5 H470 Z" class="gate" fill="#fdecec"/><text x="510" y="366" class="glabel" text-anchor="middle">AND</text><text x="462" y="304.5" class="case" text-anchor="end">Caso 3</text><text x="515" y="428.5" text-anchor="middle" class="redund">redundante</text><path d="M50,450.0 L470,450.0" fill="none" stroke="#1f6fb2" stroke-width="1.8" stroke-linejoin="round"/><circle cx="50" cy="450.0" r="4.2" fill="#1f6fb2"/><path d="M154,467.0 L470,467.0" fill="none" stroke="#7a4fb5" stroke-width="1.8" stroke-linejoin="round"/><circle cx="154" cy="467.0" r="4.2" fill="#7a4fb5"/><path d="M258,484.0 L470,484.0" fill="none" stroke="#c2185b" stroke-width="1.8" stroke-linejoin="round"/><circle cx="258" cy="484.0" r="4.2" fill="#c2185b"/><path d="M310,501.0 L470,501.0" fill="none" stroke="#5b7d1a" stroke-width="1.8" stroke-linejoin="round"/><circle cx="310" cy="501.0" r="4.2" fill="#5b7d1a"/><path d="M362,518.0 L470,518.0" fill="none" stroke="#a3161a" stroke-width="1.8" stroke-linejoin="round"/><circle cx="362" cy="518.0" r="4.2" fill="#a3161a"/><path d="M470,432.5 H510 A51.5,51.5 0 0 1 510,535.5 H470 Z" class="gate" fill="#fff"/><text x="510" y="488" class="glabel" text-anchor="middle">AND</text><text x="462" y="426.5" class="case" text-anchor="end">Caso 4</text><path d="M102,572.0 L470,572.0" fill="none" stroke="#0e8a7e" stroke-width="1.8" stroke-linejoin="round"/><circle cx="102" cy="572.0" r="4.2" fill="#0e8a7e"/><path d="M154,589.0 L470,589.0" fill="none" stroke="#7a4fb5" stroke-width="1.8" stroke-linejoin="round"/><circle cx="154" cy="589.0" r="4.2" fill="#7a4fb5"/><path d="M258,606.0 L470,606.0" fill="none" stroke="#c2185b" stroke-width="1.8" stroke-linejoin="round"/><circle cx="258" cy="606.0" r="4.2" fill="#c2185b"/><path d="M310,623.0 L470,623.0" fill="none" stroke="#5b7d1a" stroke-width="1.8" stroke-linejoin="round"/><circle cx="310" cy="623.0" r="4.2" fill="#5b7d1a"/><path d="M362,640.0 L470,640.0" fill="none" stroke="#a3161a" stroke-width="1.8" stroke-linejoin="round"/><circle cx="362" cy="640.0" r="4.2" fill="#a3161a"/><path d="M470,554.5 H510 A51.5,51.5 0 0 1 510,657.5 H470 Z" class="gate" fill="#fff"/><text x="510" y="610" class="glabel" text-anchor="middle">AND</text><text x="462" y="548.5" class="case" text-anchor="end">Caso 5</text><path d="M553.0,118 L648,118 L648,310 L705.7121777777778,310" fill="none" stroke="#1d2330" stroke-width="1.8" stroke-linejoin="round"/><path d="M553.0,240 L638,240 L638,336 L709.6780444444445,336" fill="none" stroke="#1d2330" stroke-width="1.8" stroke-linejoin="round"/><path d="M561.5,362 L628,362 L628,362 L711.0,362" fill="none" stroke="#1d2330" stroke-width="1.8" stroke-linejoin="round"/><path d="M561.5,484 L638,484 L638,388 L709.6780444444445,388" fill="none" stroke="#1d2330" stroke-width="1.8" stroke-linejoin="round"/><path d="M561.5,606 L648,606 L648,414 L705.7121777777778,414" fill="none" stroke="#1d2330" stroke-width="1.8" stroke-linejoin="round"/><path d="M700,287.0 Q722,362 700,437.0 Q783.7,437.0 835.0,362 Q783.7,287.0 700,287.0 Z" class="gate" fill="#fff"/><text x="760.75" y="366" class="glabel" text-anchor="middle">OR</text><path d="M835.0,362 L885.0,362" fill="none" stroke="#1d2330" stroke-width="2.6" stroke-linejoin="round"/><circle cx="885.0" cy="362" r="5" fill="#1d2330"/><text x="895.0" y="369" class="out">T</text></svg></div>
+    <div class="count"><span>Compuertas: <b>6</b> (5 AND + 1 OR)</span><span>En compuertas de 2 entradas: <b>22</b></span><span>Apariciones de variables: <b>23</b></span></div>
+  </div>
+  <div class="panel">
+    <h2>Circuito simplificado <span class="badge b-green">mínimo</span></h2>
+    <p class="sub">Identificado, validado, habilitado y con cupo: un solo producto.</p>
+    <div class="svgwrap"><svg viewBox="0 0 789.0 410"><text x="26" y="72" text-anchor="end" class="var" fill="#1f6fb2">L</text><circle cx="40" cy="66" r="4.2" fill="#1f6fb2"/><text x="26" y="102" text-anchor="end" class="var" fill="#0e8a7e">F</text><circle cx="40" cy="96" r="4.2" fill="#0e8a7e"/><text x="26" y="156" text-anchor="end" class="var" fill="#7a4fb5">V</text><circle cx="40" cy="150" r="4.2" fill="#7a4fb5"/><text x="26" y="211" text-anchor="end" class="var" fill="#b5651d">A</text><circle cx="40" cy="205" r="4.2" fill="#b5651d"/><text x="26" y="268" text-anchor="end" class="var" fill="#c2185b">G</text><circle cx="40" cy="262" r="4.2" fill="#c2185b"/><text x="26" y="298" text-anchor="end" class="var" fill="#5b7d1a">B</text><circle cx="40" cy="292" r="4.2" fill="#5b7d1a"/><text x="26" y="378" text-anchor="end" class="var" fill="#a3161a">D</text><circle cx="40" cy="372" r="4.2" fill="#a3161a"/><path d="M40,66 L177.84311224489795,66" fill="none" stroke="#1f6fb2" stroke-width="2.2" stroke-linejoin="round"/><path d="M40,96 L177.84311224489795,96" fill="none" stroke="#0e8a7e" stroke-width="2.2" stroke-linejoin="round"/><path d="M170,53.0 Q192,81 170,109.0 Q225.8,109.0 260,81 Q225.8,53.0 170,53.0 Z" class="gate" fill="#fff"/><text x="210.5" y="85" class="glabel" text-anchor="middle">OR</text><path d="M40,262 L170,262" fill="none" stroke="#c2185b" stroke-width="2.2" stroke-linejoin="round"/><path d="M40,292 L170,292" fill="none" stroke="#5b7d1a" stroke-width="2.2" stroke-linejoin="round"/><path d="M170,251.0 H210 A26.0,26.0 0 0 1 210,303.0 H170 Z" class="gate" fill="#fff"/><text x="210" y="281" class="glabel" text-anchor="middle">AND</text><path d="M40,205 L353.05707491082046,205" fill="none" stroke="#b5651d" stroke-width="2.2" stroke-linejoin="round"/><path d="M236.0,277 L300,277 L300,235 L353.05707491082046,235" fill="none" stroke="#c2185b" stroke-width="2.2" stroke-linejoin="round"/><rect x="228.4" y="266" width="67.19999999999999" height="22" rx="11" fill="#fff" stroke="#c2185b" stroke-width="1.6"/><text x="262" y="282" text-anchor="middle" class="tag" fill="#c2185b">E = G·B</text><path d="M345,191.0 Q367,220 345,249.0 Q400.8,249.0 435,220 Q400.8,191.0 345,191.0 Z" class="gate" fill="#fff"/><text x="385.5" y="224" class="glabel" text-anchor="middle">OR</text><path d="M260,81 L570,81 L570,201 L600,201" fill="none" stroke="#1f6fb2" stroke-width="2.2" stroke-linejoin="round"/><rect x="358.8" y="70" width="82.39999999999999" height="22" rx="11" fill="#fff" stroke="#1f6fb2" stroke-width="1.6"/><text x="400" y="86" text-anchor="middle" class="tag" fill="#1f6fb2">N = L + F</text><path d="M40,150 L555,150 L555,227 L600,227" fill="none" stroke="#7a4fb5" stroke-width="2.2" stroke-linejoin="round"/><path d="M435,220 L540,220 L540,253 L600,253" fill="none" stroke="#b5651d" stroke-width="2.2" stroke-linejoin="round"/><rect x="436.8" y="209" width="82.39999999999999" height="22" rx="11" fill="#fff" stroke="#b5651d" stroke-width="1.6"/><text x="478" y="225" text-anchor="middle" class="tag" fill="#b5651d">H = A + E</text><path d="M40,372 L525,372 L525,279 L600,279" fill="none" stroke="#a3161a" stroke-width="2.2" stroke-linejoin="round"/><text x="607" y="205" class="pin">N</text><text x="607" y="231" class="pin">V</text><text x="607" y="257" class="pin">H</text><text x="607" y="283" class="pin">D</text><path d="M600,181.0 H640 A59.0,59.0 0 0 1 640,299.0 H600 Z" class="gate" fill="#fff"/><text x="650" y="245" class="glabel" text-anchor="middle">AND</text><path d="M699.0,240 L749.0,240" fill="none" stroke="#1d2330" stroke-width="2.6" stroke-linejoin="round"/><circle cx="749.0" cy="240" r="5" fill="#1d2330"/><text x="759.0" y="247" class="out">T</text></svg></div>
+    <div class="count"><span>Compuertas: <b>4</b> (2 OR + 2 AND)</span><span>En compuertas de 2 entradas: <b>6</b></span><span>Apariciones de variables: <b>7</b></span></div>
+    <h4 style="margin:16px 0 8px;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)">Proposiciones auxiliares del circuito</h4>
+    <ul class="props"><li><span class="chip" style="--c:#1f6fb2">N</span><span><b>N = L + F</b> — El vehículo queda identificado en portería (Regla 2).</span></li><li><span class="chip" style="--c:#c2185b">E</span><span><b>E = G · B</b> — El estudiante de pregrado está habilitado (Regla 3).</span></li><li><span class="chip" style="--c:#b5651d">H</span><span><b>H = A + E</b> — El usuario está habilitado para usar el parqueadero (Regla 4).</span></li></ul>
+  </div>
+</div>
+
+<div class="sect">
+  <div class="box">
+    <h3>Proposiciones (entradas y salida)</h3>
+    <ul class="props in"><li><span class="chip" style="--c:#1f6fb2">L</span><span>El guardia ingresa correctamente la placa del vehículo (LPR).</span></li><li><span class="chip" style="--c:#0e8a7e">F</span><span>El sistema lee correctamente el carnet RFID del usuario.</span></li><li><span class="chip" style="--c:#7a4fb5">V</span><span>La identidad del usuario queda validada (Vc + Vw + Vl).</span></li><li><span class="chip" style="--c:#b5651d">A</span><span>El usuario pertenece a un perfil autorizado (administrativo, docente o posgrado).</span></li><li><span class="chip" style="--c:#c2185b">G</span><span>El usuario es estudiante activo de pregrado.</span></li><li><span class="chip" style="--c:#5b7d1a">B</span><span>El estudiante está registrado en Bienestar Universitario.</span></li><li><span class="chip" style="--c:#a3161a">D</span><span>Hay cupos disponibles en el parqueadero.</span></li><li><span class="chip" style="--c:#111">T</span><span>La talanquera se abre (salida).</span></li></ul>
+    <h4>Simplificación paso a paso</h4>
+    <table><thead><tr><th>#</th><th>Expresión</th><th>Ley aplicada</th></tr></thead>
+    <tbody><tr><td class="n">0</td><td class="mono">(L·V·A·D) + (F·V·A·D) + (L·F·V·A·D) + (L·V·G·B·D) + (F·V·G·B·D)</td><td>Expresión original (5 términos)</td></tr><tr><td class="n">1</td><td class="mono">(L·V·A·D) + (F·V·A·D) + (L·V·G·B·D) + (F·V·G·B·D)</td><td>Absorción: X + X·Y = X, con X = L·V·A·D, Y = F → se elimina el Caso 3</td></tr><tr><td class="n">2</td><td class="mono">(V·D·L·A) + (V·D·F·A) + (V·D·L·G·B) + (V·D·F·G·B)</td><td>Conmutativa: V·D al inicio de cada término</td></tr><tr><td class="n">3</td><td class="mono">(V·D) · [L·A + F·A + L·G·B + F·G·B]</td><td>Distributiva: se factoriza V·D</td></tr><tr><td class="n">4</td><td class="mono">(V·D) · [A·(L + F) + G·B·(L + F)]</td><td>Distributiva: se factoriza A y G·B</td></tr><tr><td class="n">5</td><td class="mono">(V·D) · (L + F) · (A + G·B)</td><td>Distributiva: se factoriza (L + F)</td></tr><tr><td class="n">6</td><td class="mono">(V·D) · N · (A + E)</td><td>Sustitución: N = L + F, E = G·B</td></tr><tr class="final"><td class="n">7</td><td class="mono">N · V · H · D</td><td>Sustitución H = A + E y conmutativa</td></tr></tbody></table>
+  </div>
+  <div class="box">
+    <h3>Justificación de eficiencia</h3>
+    <table class="cmp"><thead><tr><th>Criterio</th><th>Original</th><th>Simplificado</th></tr></thead><tbody>
+      <tr><td>Términos</td><td>5 productos unidos por sumas</td><td>1 producto de 4 factores</td></tr>
+      <tr><td>Operaciones lógicas</td><td>22 (18 AND + 4 OR)</td><td>6 (4 AND + 2 OR)</td></tr>
+      <tr><td>Apariciones de variables</td><td>23</td><td>7</td></tr>
+      <tr><td>Lecturas promedio*</td><td>8,6 por vehículo</td><td>3,1 (2,5 si se evalúa D primero)</td></tr>
+      <tr><td>Lecturas en el peor caso*</td><td>23</td><td>7</td></tr>
+      <tr><td>Parqueadero lleno*</td><td>9,6 lecturas en promedio</td><td>1 (basta leer D = 0)</td></tr>
+      <tr><td>Agregar un lector QR</td><td>2 términos nuevos</td><td>N = L + F + Q</td></tr>
+    </tbody></table>
+    <ul class="why" style="margin-top:14px">
+      <li><b>Menos compuertas y menor costo:</b> de 22 a 6 operaciones de 2 entradas; menos instrucciones en software o menos compuertas en hardware.</li>
+      <li><b>Mayor velocidad:</b> al ser un único producto, basta con que un factor valga 0 para cerrar; en el original, una condición que falla (sin cupos) se revisa en los 5 términos.</li>
+      <li><b>Sin redundancia:</b> el Caso 3 (placa y RFID a la vez) ya está incluido en el Caso 1.</li>
+      <li><b>Contexto real:</b> V y H se calculan al registrar o validar al usuario; en portería solo se evalúan en tiempo real D y N.</li>
+      <li><b>Escalabilidad:</b> un nuevo canal, perfil o lector se agrega en su regla sin tocar la regla de apertura.</li>
+    </ul>
+    <div class="concl">Diseño elegido: <span class="mono">T = N · V · H · D</span> — equivalente al original en las 128 combinaciones de L, F, V, A, G, B, D.</div>
+  </div>
+</div>
+<footer>* Lecturas con evaluación en cortocircuito, promediadas sobre las 128 combinaciones posibles. Notación: · = AND, + = OR. Fuente: Reglas lógicas del Sistema de Gestión y Control de Parqueaderos (v6).</footer>
+</div>
+</body></html>
